@@ -44,7 +44,7 @@ class CIFAR_AUG(Dataset):
         return len(self.data)
 
 Section('cfg', 'arguments to give the writer').params(
-    dataset=Param(And(str, OneOf(['cifar', 'imagenet', 'cifar101', 'cifar102'])), 'Which dataset to write', default='imagenet'),
+    dataset=Param(And(str, OneOf(['cifar', 'imagenet', 'cifar10Generate', 'cifar10_cifar10Generate', 'cifar101', 'cifar102'])), 'Which dataset to write', default='imagenet'),
     split=Param(And(str, OneOf(['train', 'test'])), 'Train or test set', required=True),
     data_dir=Param(str, 'Where to find the PyTorch dataset', required=True),
     write_path=Param(str, 'Where to write the new dataset', required=True),
@@ -76,6 +76,13 @@ def main(dataset, split, data_dir, write_path, max_resolution, num_workers,
         max_resolution = None
     if dataset == 'cifar':
         my_dataset = CIFAR10(root=data_dir, train=(split == 'train'), download=True)
+    elif dataset == 'cifar10Generate':
+        my_dataset = ImageFolder(root=data_dir)
+    elif dataset == 'cifar10_cifar10Generate':
+        data_dirs = data_dir.split('+')
+        my_dataset1 = CIFAR10(root=data_dirs[0], train=(split == 'train'), download=True)
+        my_dataset2 = ImageFolder(root=data_dirs[1])
+        my_dataset = ConcatDataset([my_dataset1, my_dataset2])
     elif dataset == 'cifar101':
         assert split == 'test'
         my_dataset = CIFAR_AUG(data_dir, dataset)

@@ -2,8 +2,8 @@
 
 write_dataset () {
     write_path=/home/andong.hua/datasets/cifar10/${1}.beton
-    data_dir=/home/andong.hua/datasets/raw/cifar102
-    dataset=cifar102
+    data_dir=/home/andong.hua/datasets/raw/cifar10Generate/test
+    dataset=cifar10Generate
     split=test
     echo "Writing cifar10 ${1} dataset to ${write_path}"
     python write_imagenet.py \
@@ -17,5 +17,4 @@ write_dataset () {
         --cfg.jpeg_quality=90
 }
 
-# write_dataset train
-write_dataset test102
+write_dataset test_cifar10Generate
